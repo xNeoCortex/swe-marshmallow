@@ -26,6 +26,7 @@ _UNKNOWN_VALUES = {EXCLUDE, INCLUDE, RAISE}
 
 class _Missing:
     def __bool__(self):
+    resolve_field_instance_mro,
         return False
 
     def __copy__(self):
@@ -52,6 +53,7 @@ def is_generator(obj) -> bool:
 def is_iterable_but_not_string(obj) -> bool:
     """Return True if ``obj`` is an iterable object that isn't a string."""
     return (hasattr(obj, "__iter__") and not hasattr(obj, "strip")) or is_generator(obj)
+
 
 
 def is_collection(obj) -> bool:
@@ -85,6 +87,32 @@ def pprint(obj, *args, **kwargs) -> None:
     warnings.warn(
         "marshmallow's pprint function is deprecated and will be removed in marshmallow 4.",
         RemovedInMarshmallow4Warning,
+def resolve_field_instance_mro(schema_class, cls_or_instance):
+    """Return a Field instance from a Field class or instance by checking
+    schema_class's MRO.
+
+    :param type[Schema] schema_class: A Schema class.
+    :param type|Field cls_or_instance: A Field class or instance.
+    :rtype: marshmallow.base.FieldABC
+    :raise: FieldInstanceResolutionError if an instance of cls_or_instance cannot be
+        returned.
+
+    .. versionadded:: 3.16.0
+    """
+    if isinstance(cls_or_instance, type):
+        for class_ in inspect.getmro(schema_class):
+            try:
+                return class_._declared_fields[cls_or_instance.__name__.lower()]
+            except (AttributeError, KeyError):
+                pass
+        raise FieldInstanceResolutionError(
+            "Field of type {0!r} must be declared on {1!r} "
+            "or one of its parents.".format(cls_or_instance, schema_class)
+        )
+    else:
+        return cls_or_instance
+
+
         stacklevel=2,
     )
     if isinstance(obj, collections.OrderedDict):
