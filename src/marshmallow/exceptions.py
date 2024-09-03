@@ -19,7 +19,7 @@ class ValidationError(MarshmallowError):
 
     :param message: An error message, list of error messages, or dict of
         error messages. If a dict, the keys are subitems and the values are error messages.
-    :param field_name: Field name to store the error on.
+    :param field_name: Field name (or list of field names) to store the error on.
         If `None`, the error is stored as schema-level error.
     :param data: Raw input data.
     :param valid_data: Valid (de)serialized data.
