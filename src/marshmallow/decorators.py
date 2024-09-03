@@ -82,12 +82,18 @@ class MarshmallowHook:
     __marshmallow_hook__: dict[tuple[str, bool] | str, Any] | None = None
 
 
-def validates(field_name: str) -> Callable[..., Any]:
+def validates(field_name: str | None = None, data_key: str | None = None) -> Callable[..., Any]:
     """Register a field validator.
 
-    :param str field_name: Name of the field that the method validates.
+    :param str|None field_name: Name of the field that the method validates.
+    :param str|None data_key: Key in the input data that maps to this field.
+        If unset, defaults to ``field_name``. If ``field_name`` is unset,
+        defaults to the name of the decorated method.
+
+    .. versionchanged:: 3.21.0
+        Added ``data_key`` parameter.
     """
-    return set_hook(None, VALIDATES, field_name=field_name)
+    return set_hook(None, VALIDATES, field_name=field_name, data_key=data_key)
 
 
 def validates_schema(
