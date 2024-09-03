@@ -18,7 +18,8 @@ class ValidationError(MarshmallowError):
     Validators and custom fields should raise this exception.
 
     :param message: An error message, list of error messages, or dict of
-        error messages. If a dict, the keys are subitems and the values are error messages.
+        error messages. If a dict, the keys are subitems and the values are
+        error messages.
     :param field_name: Field name to store the error on.
         If `None`, the error is stored as schema-level error.
     :param data: Raw input data.

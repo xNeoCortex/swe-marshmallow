@@ -481,13 +481,14 @@ class Schema(base.SchemaABC, metaclass=SchemaMeta):
     @staticmethod
     def _call_and_store(getter_func, data, *, field_name, error_store, index=None):
         """Call ``getter_func`` with ``data`` as its argument, and store any `ValidationErrors`.
-
+        
         :param callable getter_func: Function for getting the serialized/deserialized
             value from ``data``.
         :param data: The data passed to ``getter_func``.
         :param str field_name: Field name.
         :param int index: Index of the item being validated, if validating a collection,
             otherwise `None`.
+        :param ErrorStore error_store: Structure to store errors.
         """
         try:
             value = getter_func(data)

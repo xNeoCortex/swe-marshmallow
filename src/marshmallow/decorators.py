@@ -85,7 +85,9 @@ class MarshmallowHook:
 def validates(field_name: str) -> Callable[..., Any]:
     """Register a field validator.
 
-    :param str field_name: Name of the field that the method validates.
+    :param str field_name: Name of the field that the method validates. This
+        must be a declared field on the Schema. If it is a method, it must
+        be a valid Python identifier.
     """
     return set_hook(None, VALIDATES, field_name=field_name)
 
